@@ -1,0 +1,59 @@
+
+// ディレクトリ
+dir = "../image/"
+;picload dir+"test5.jpg"
+
+// 画像リストの取得
+sdim jpgs, 1000
+sdim pngs, 1000
+sdim list, 2000
+
+dirlist jpgs, dir+"*.jpg", 1
+dirlist pngs, dir+"*.png", 1
+list = jpgs + pngs
+
+// 配列化
+notesel list
+sdim imgs, 50, notemax
+for i, 0, notemax, 1
+	noteget fn,i
+	imgs(i) = fn
+next
+
+// プレビュー
+for i, 0, length(imgs), 1
+	// 画像の順次描画
+	picload dir+imgs(i)
+	// 直線指定フェーズ
+	repeat
+		stick k
+		if k&256 {
+			ax = mousex
+			ay = mousey
+			a = 1
+		}
+		if k&512 {
+			bx = mousex
+			by = mousey
+			b = 1
+		}
+		if a = 1 & b = 1 {
+			line ax,ay,bx,by
+			a = 0 : b = 0
+			break
+		}
+		await 1
+	loop
+	// 確認
+	dialog "NEXT？",2
+	if stat=6 {
+		noteload dir+"data.txt"
+		noteadd ""+imgs(i)+"\t"+ax+"\t"+ay+"\t"+bx+"\t"+by
+		notesave dir+"data.txt"
+	}else{
+		i--
+	}
+next
+
+dialog "DONE!"
+end

@@ -57,3 +57,24 @@ typings/
 # dotenv environment variables file
 .env
 
+# Images
+*.jpg
+*.png
+*.gif
+*.bmp
+
+# HSP
+*.hsptmp
+.hsptmp
+hsptmp
+*.obj
+.obj
+obj
+*.packfile
+.packfile
+packfile
+*.ax
+*.exe
+
+# This Project
+out/
