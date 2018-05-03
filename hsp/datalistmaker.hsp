@@ -23,22 +23,73 @@ next
 // プレビュー
 for i, 0, length(imgs), 1
 	// 画像の順次描画
+	/* 画面1に画像を出力 */
+	screen 1
 	picload dir+imgs(i)
+	
+	/* 画像の大きさを記録 */
+	bw = ginfo_sx
+	bh = ginfo_sy
+
+	zx = (0.0+bw)/640
+	zy = (0.0+bh)/480
+	if zx<zy {
+		z = zy
+	}else{
+		z = zx
+	}
+	
+	/* 画面0に画面1の画像をサイズを変えて表示 */
+	gsel 0
+	pos 0,0
+	color : boxf
+	gzoom (0.0+bw)/z,(0.0+bh)/z,1,0,0,bw,bh
+	
+	/* 画面1を非表示 */
+	buffer 1
+	gsel 0
+	
 	// 直線指定フェーズ
 	repeat
+		// タイトルバー表示
+		if a = 1 {
+			if b = 1 {
+				st = "OK"
+			}else{
+				st = "BOTTOM"
+			}
+		}else{
+			st = "TOP"
+		}
+		title "["+st+"] "+int(z*mousex)+","+int(z*mousey)
+
+		// キー入力
 		stick k
 		if k&256 {
+			/* 始点 */
 			ax = mousex
 			ay = mousey
+			/* フラグ */
 			a = 1
 		}
 		if k&512 {
+			/* 終点 */
 			bx = mousex
 			by = mousey
+			/* フラグ */
 			b = 1
 		}
 		if a = 1 & b = 1 {
-			line ax,ay,bx,by
+			/* 線引きUI用 */
+			color
+			line ax-1,ay-1,bx-1,by-1
+			line ax+1,ay+1,bx+1,by+1
+			color 255,255,255
+			line ax+1,ay-1,bx+1,by-1
+			line ax-1,ay+1,bx-1,by+1
+			; color 127,127,127
+			; line ax,ay,bx,by
+			/* 次の処理へ */
 			a = 0 : b = 0
 			break
 		}
@@ -48,7 +99,7 @@ for i, 0, length(imgs), 1
 	dialog "NEXT？",2
 	if stat=6 {
 		noteload dir+"data.txt"
-		noteadd ""+imgs(i)+"\t"+ax+"\t"+ay+"\t"+bx+"\t"+by
+		noteadd ""+imgs(i)+"\t"+int(z*ax)+"\t"+int(z*ay)+"\t"+int(z*bx)+"\t"+int(z*by)
 		notesave dir+"data.txt"
 	}else{
 		i--
