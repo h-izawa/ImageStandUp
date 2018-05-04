@@ -2,12 +2,12 @@
 趣味のために、大量の画像の角度を変えなければならなくなったので
 
 # インスコ
-```
+```batchfile
 git clone https://github.com/katai5plate/ImageStandUp && cd ImageStandUp && npm i
 ```
 
 # 実行
-```
+```batchfile
 npm start
 ```
 ## エラー処理してないです。
